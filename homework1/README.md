@@ -1,1 +1,18 @@
 # Homework 1 - due 2/6
+
+1. Discuss your initial thoughts in details on how you will design this application? (2 points)
+
+
+2. Discuss what development methodology you will use and why? (2 points)
+
+
+3. Provide high level design / architecture of your solution that you are proposing? (6 points)
+
+
+4. IMPORTANT: list who did what within the group. TAs should be able to validate in GitHub, otherwise team members who didn't contribute will receive a ZERO.
+
+| Group Member Name | What is your contribution? | Discussion Notes   
+| ----------------- | -------------------------- | --------------------------------- |
+| `Dylan Mall`      |                       |                          |
+| `Casey Bernal`    |                       |                          |
+| `Tahmeed Zaman`   |                       |                          |
