@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+    h1 {
+        text-align: center;
+    }
+    
+    #username {
+        height: 50px;
+        font-size: 14pt;
+    }
+    
+    #password {
+        height: 50px;
+        font-size: 14pt;
+    }
+    
+    .button {
+        background-color: #363fbe;
+        /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+    
+    .container {
+        width: 500px;
+        clear: both;
+    }
+    
+    .container input {
+        width: 100%;
+        clear: both;
+    }
+</style>
+
+<head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+    <div class="container1">
+        <form onsubmit="go(); return false;">
+            <h1>Sign In</h1>
+            <div class="field">
+                <label for="username" style="font-size: 17px">Username: </label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" size="30" required />
+                <small></small>
+            </div>
+            <div class="field">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" size="30" required />
+                <small></small>
+            </div>
+            <div class="field">
+                <input type="radio" id="new" name="new_or_existing" value="New" required> New User
+                <input type="radio" id="existing" name="new_or_existing" value="Existing" required> Existing User
+            </div>
+            <div>
+                <button class="button" id="button1">Submit</button>
+            </div>
+        </form>
+    </div>
+    <script src="/client/index.js"></script>
+</body>
+
+</html>
