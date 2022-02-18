@@ -1,0 +1,31 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+.root{
+
+  width: "50ch",
+  position: "fixed",
+  top: "25%",
+  left: "50%",
+  textAlign: "center",
+  transform: "translate(-50%, -50%)",
+  marginTop: theme.spacing(2),
+
+}
+
+.formTitle{
+    marginTop:"20px",
+    margin:"auto",
+    fontWeight:"bold",
+    textTransform:"uppercase",
+}
+.label{
+    width:"50px",
+    display:"inline-block",
+    textAlign:"center",
+    fontSize:"20px",
+}
+.registration{
+    float:"left",
+}
