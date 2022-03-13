@@ -74,6 +74,22 @@ app.post('/login', async(req, res) => {
     }
 });
 
+app.post('/fuel', async(req,res) => {
+    try {
+        let userGall = req.body.gallons;
+        let addrs = users.find((data) => req.body.address === data.address)
+        let deldate = req.body.date;
+        let sugGall = req.body.suggestedGallon;
+        let total = req.body.total_value;
+
+        res.send("<div align ='center'><h2 style='font-size: 50px'>Submission Successful</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>Log In</a></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>");
+
+        }
+    } catch {
+        res.send("Internal server error");
+    }
+});
+
 
 // set up the server listening at port 5000 (the port number can be changed)
 app.listen(5500, () => {
