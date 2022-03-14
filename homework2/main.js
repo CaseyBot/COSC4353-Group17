@@ -75,7 +75,7 @@ app.post('/login', async(req, res) => {
 });
  app.post('/profile',async(req ,res) => {   
     try{
-        const found = users.some(user => user.username === parseInt(req.body.username));
+        const found = users.some(user => date.username === parseInt(req.body.username));
         let account={
             name:req.body.name,
             address1:req.body.add1,
@@ -84,7 +84,7 @@ app.post('/login', async(req, res) => {
             state:req.body.state,
             zipcode:req.body.zip,
         }
-         users.push(account);   
+         found.push(account);   
     }                       
     catch{
 
@@ -107,7 +107,21 @@ app.post('/fuel', async(req,res) => {
     }
 });
 
-
+app.get('/history', function(req, res){
+    try{
+    let foundUser = users.find((data) => req.body.username === data.username);
+    for(const property in foundUser.requests){
+        res.send(<td><script>users.requests[property].userGall</script></td>);
+        res.send(<td><script>users.requests[property].addrs</script></td>);
+        res.send(<td><script>users.requests[property].deldate</script></td>);
+        res.send(<td><script>users.requests[property].sugGall</script></td>);
+        res.send(<td><script>users.requests[property].total</script></td>);
+        }
+    }
+    catch {
+        res.send("Internal server error");
+    }
+  });
 // set up the server listening at port 5000 (the port number can be changed)
 app.listen(5500, () => {
     console.log("server has started on port 5500");
