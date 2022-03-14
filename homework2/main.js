@@ -86,7 +86,7 @@ app.post('/profile',async(req ,res) => {
     }
     let newObj = {};
 
-    userModel.findByIdAndUpdate({'_id':req.body._id}, { $set: userObj }, { upsert: true, new: true })
+    userModel.findByIdAndUpdate({'username':req.body.username}, { $set: account }, { upsert: true, new: true })
     }
     catch{
 
