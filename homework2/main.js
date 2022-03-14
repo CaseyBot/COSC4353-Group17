@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const users = require('./data').userCredentials;
 //const pool = require('./db');
 const server = http.createServer(app);
+module.exports = { app };
 
 // middleware
 app.use(cors());
@@ -73,25 +74,26 @@ app.post('/login', async(req, res) => {
         res.send("Internal server error");
     }
 });
- app.post('/profile',async(req ,res) => {   
-    try{
+
+app.post('/profile', async(req, res) => {
+    try {
         const found = users.some(user => date.username === parseInt(req.body.username));
-        let account={
-            name:req.body.name,
-            address1:req.body.add1,
-            address2:req.body.add2,
-            city:req.body.city,
-            state:req.body.state,
-            zipcode:req.body.zip,
+        let account = {
+            name: req.body.name,
+            address1: req.body.add1,
+            address2: req.body.add2,
+            city: req.body.city,
+            state: req.body.state,
+            zipcode: req.body.zip,
         }
-         found.push(account);   
-    }                       
-    catch{
+        found.push(account);
+    } catch {
 
         res.send("Internal server error");
     }
 });
-app.post('/fuel', async(req,res) => {
+
+app.post('/fuel', async(req, res) => {
     try {
         let userGall = req.body.gallons;
         let addrs = users.find((data) => req.body.address === data.address)
@@ -101,27 +103,27 @@ app.post('/fuel', async(req,res) => {
 
         res.send("<div align ='center'><h2 style='font-size: 50px'>Submission Successful</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>Log In</a></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>");
 
+    } catch {
+        res.send("Internal server error");
+    }
+});
+
+app.get('/history', function(req, res) {
+    try {
+        let foundUser = users.find((data) => req.body.username === data.username);
+        for (const property in foundUser.requests) {
+            res.send("<td><script> users.requests[property].userGall </script></td>");
+            res.send("<td><script> users.requests[property].addrs </script></td>");
+            res.send("<td><script> users.requests[property].deldate </script></td>");
+            res.send("<td><script> users.requests[property].sugGall </script></td>");
+            res.send("<td><script> users.requests[property].total </script></td>");
         }
     } catch {
         res.send("Internal server error");
     }
 });
 
-app.get('/history', function(req, res){
-    try{
-    let foundUser = users.find((data) => req.body.username === data.username);
-    for(const property in foundUser.requests){
-        res.send(<td><script>users.requests[property].userGall</script></td>);
-        res.send(<td><script>users.requests[property].addrs</script></td>);
-        res.send(<td><script>users.requests[property].deldate</script></td>);
-        res.send(<td><script>users.requests[property].sugGall</script></td>);
-        res.send(<td><script>users.requests[property].total</script></td>);
-        }
-    }
-    catch {
-        res.send("Internal server error");
-    }
-  });
+
 // set up the server listening at port 5000 (the port number can be changed)
 app.listen(5500, () => {
     console.log("server has started on port 5500");
