@@ -73,21 +73,19 @@ app.post('/login', async(req, res) => {
         res.send("Internal server error");
     }
 });
-app.post('/profile',async(req ,res) => {
+ app.post('/profile',async(req ,res) => {   
     try{
-    let newData = new userModel(req.body)
-    let account={
-        "name":req.body.name,
-        "address1":req.body.add1,
-        "address2":req.body.add2,
-        "city":req.body.city,
-        "state":req.body.state,
-        "zipcode":req.body.zip,
-    }
-    let newObj = {};
-
-    userModel.findByIdAndUpdate({'username':req.body.username}, { $set: account }, { upsert: true, new: true })
-    }
+        const found = users.some(user => user.username === parseInt(req.body.username));
+        let account={
+            name:req.body.name,
+            address1:req.body.add1,
+            address2:req.body.add2,
+            city:req.body.city,
+            state:req.body.state,
+            zipcode:req.body.zip,
+        }
+         users.push(account);   
+    }                       
     catch{
 
         res.send("Internal server error");
