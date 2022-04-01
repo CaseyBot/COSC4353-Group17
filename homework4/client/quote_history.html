@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+
+</style>
+
+<head>
+    <title>History</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="" />
+</head>
+
+<body>
+    <div>
+        <h1 style="text-align: center; font-size: 40px;">Fuel Quote History</h1>
+    </div>
+    <div>
+        <button class="button" onclick="location.href = 'hub.html'">Back to Hub</button>
+    </div>
+    <div>
+        <table style="border: 1px solid; width: 100%; font-size: 26px;" id="quotes-list">
+            <thead>
+                <tr>
+                    <th>Gallons Requested</th>
+                    <th>Delivery Address</th>
+                    <th>Delivery Date</th>
+                    <th>Suggested Price per Gallon</th>
+                    <th>Total Amount Due</th>
+                </tr>
+            </thead>
+            <tbody id="quote-history">
+            </tbody>
+        </table>
+    </div>
+    <script src="quote_history.js"></script>
+</body>
+
+</html>
