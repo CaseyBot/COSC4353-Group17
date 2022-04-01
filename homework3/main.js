@@ -110,6 +110,7 @@ app.post('/register', async(req, res) => {
 
 app.post('/profile',async(req ,res) => {
     try{
+        let USER= 2;
        const found = users.some(user => user.username === parseInt(req.body.username));
        console.log(found);
         let account={
@@ -121,13 +122,13 @@ app.post('/profile',async(req ,res) => {
             zipcode:req.body.zip,
         };
         sql.connect(config, function (err) {
-
             var connection=new sql.Request();
             if (err) {
               console.log(err);
               return;
               }
-          connection.query("INSERT INTO UserCredentials (UserLogin, UserPassword) VALUES ( '" + newUser.username + "','" + newUser.password + "')", function(err,recordset){
+          connection.query("INSERT INTO ClientInformation (FullName, Address1, Address2, City, State, ZipCode, UserID) VALUES ( '" + account.name + "','" + account.address1 + "','" + 
+            account.address2 + "','" + account.city + "','" + account.state + "','" + account.zipcode + "','" + USER + "')", function(err,recordset){
               console.log("in query function");
               if (err) {
                   console.log(err);
