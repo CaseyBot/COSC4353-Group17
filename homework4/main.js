@@ -161,15 +161,38 @@ app.post('/profile',async(req ,res) => {
 
 app.post('/fuel', async(req, res) => {
     try {
+        let USER = 2;
+        const found = users.some(user => user.username === parseInt(req.body.username));
+        console.log(found);
         let userGall = req.body.gallons;
         let addrs = users.find((data) => req.body.address === data.address)
         let deldate = req.body.date;
         let sugGall = req.body.suggestedGallon;
         let total = req.body.total_value;
 
+        sql.connect(config, function(err) {
+
+            var connection = new sql.Request();
+            if (err) {
+                console.log(err);
+                return;
+            }
+            connection.query("INSERT INTO FuelQuote (Gallons, DeliveryAddress, DeliveryDate, SuggestedPrice, Total) VALUES ( '" + req.body.userGall + "','" + req.body.addrs + "','" + 
+            req.body.deldate + "','" + req.body.sugGall + "','" + req.body.total_value + "','" + USER + "')", function(err,recordset){
+              console.log("in query function");
+              if (err) {
+                  console.log(err);
+                  return;
+              }
+          });
+          connection.query();               
+      });
+
+
         res.send("<div align ='center'><h2 style='font-size: 50px'>Submission Successful</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>Log In</a></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>");
-        //push to db
+       
     } catch {
+        console.log(err.message);
         res.send("Internal server error");
     }
 });
