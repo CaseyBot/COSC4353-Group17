@@ -56,7 +56,7 @@
 </style>
 
 <body>
-    <form action="/addQuote" method ="POST" id="fuel">
+    <form action="/fuel" method="POST" id="fuel">
         <h1>Fuel Quote</h1>
         <div>
             <label for="gallons">Gallons Requested: </label>
@@ -74,18 +74,18 @@
             <small></small>
         </div>
         <div class="field">
-            <label for="suggestedGallon">Suggested Price: $15.00</label>
-            <span type="number" id="suggestedGallon" name="suggestedGallon" value="15.00"></span>
+            <label for="suggestedGallon">Suggested Price: $</label>
+            <input type="text" id="suggestedPrice" name="suggestedPrice" value=15.00 readonly />
             <small></small>
         </div>
         <div class="field">
-            <label for="total_value">Total Amount Due: $150</label>
-            <span id="total_value"></span>
+            <label for="total_value">Total Amount Due: $</label>
+            <input type="text" id="total_value" name="total_value" value=150.00 readonly />
             <small></small>
         </div>
         <button class="button" type="submit">Get Quote</button>
     </form>
-
+    <script src="main.js"></script>
 </body>
 
 
