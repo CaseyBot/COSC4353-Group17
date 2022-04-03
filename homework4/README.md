@@ -2,5 +2,5 @@ Will not work unless Database has been connected. Changes have been made to seve
 
 Features not working:
 - fuel quote history module
-- populating 'Delivery Address' from Client Profile Management to Fuel Quote Form
+- populating 'Delivery Address' on frontend from Client Profile Management to Fuel Quote Form (feature works in backend)
 - Unit Testing
