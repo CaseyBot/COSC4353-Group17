@@ -167,7 +167,6 @@ app.post('/fuel', async(req, res) => {
                 var request = new sql.Request(conn);
                 request.query("SELECT Address1 FROM ClientInformation WHERE UserID=" + userID).then(function(recordset) {
                         let userAddress = recordset.recordsets[0][0].Address1;
-                        console.log(userAddress);
                         request.query("INSERT INTO FuelQuote VALUES ( '" + req.body.gallons + "','" + userAddress + "','" + req.body.date + "','" +
                                 req.body.suggestedPrice + "','" + req.body.total_value + "','" + userID + "')").then(function(recordset) {
 
@@ -222,7 +221,6 @@ app.get('/history', function(req, res) {
                 console.log(err);
             });
     } catch (err) {
-        console.log("hi");
         console.log(err.message);
     }
 
