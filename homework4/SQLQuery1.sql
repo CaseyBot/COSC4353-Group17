@@ -25,7 +25,7 @@ CREATE TABLE FuelQuote(
 Gallons int NOT NULL,
 DeliveryAddress varChar(255) NOT NULL,
 DeliveryDate date NOT NULL,
-SuggestedPrice int NOT NULL,
-Total int NOT NULL,
+SuggestedPrice float NOT NULL,
+Total float NOT NULL,
 UserID int FOREIGN KEY REFERENCES UserCredentials(UserID),
 )
