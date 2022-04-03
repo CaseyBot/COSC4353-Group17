@@ -6,8 +6,6 @@ const fs = require("fs");
 const bcrypt = require('bcrypt');
 const path = require("path");
 const bodyParser = require('body-parser');
-// const { user } = require('pg/lib/defaults');
-const users = require('./data').userCredentials;
 const server = http.createServer(app);
 module.exports = { app };
 
@@ -43,6 +41,11 @@ app.get('/profile', function(req, res) {
 app.get('/login', function(req, res) {
     res.sendFile(path.join(__dirname + '/client/login.html'));
 });
+app.get('/history', function(req, res) {
+    res.sendFile(path.join(__dirname + '/client/quote_history.html'));
+});
+
+let userID = 1;
 
 app.post('/register', async(req, res) => {
     try {
@@ -52,7 +55,6 @@ app.post('/register', async(req, res) => {
         conn.connect().then(function() {
                 var request = new sql.Request(conn);
                 request.query("SELECT * FROM UserCredentials WHERE UserLogin='" + req.body.username + "'").then(function(recordset) {
-                        console.log(recordset);
                         if (recordset.rowsAffected != 0) {
                             res.send("<div align ='center'><h2 style='font-size: 50px'>Username unavailable, please try again</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./register.html'>Back to Register</a></div>");
                             conn.close();
@@ -95,11 +97,25 @@ app.post('/login', async(req, res) => {
                             conn.close();
                             return;
                         } else {
-                            console.log(recordset.recordsets[0][0].UserPassword);
                             let hashedPassword = recordset.recordsets[0][0].UserPassword;
                             (async function() {
                                 const passwordMatch = await bcrypt.compare(submittedPass, hashedPassword);
                                 if (passwordMatch) {
+                                    conn.connect().then(function() {
+                                            var request = new sql.Request(conn);
+                                            request.query("SELECT UserID FROM UserCredentials WHERE UserLogin='" + req.body.username + "'").then(function(recordset) {
+                                                    console.log(recordset.recordsets[0][0].UserID);
+                                                    userID = recordset.recordsets[0][0].UserID;
+                                                })
+                                                .catch(function(err) {
+                                                    console.log(err);
+                                                    conn.close();
+                                                });
+                                        })
+                                        .catch(function(err) {
+                                            console.log(err);
+                                            conn.close();
+                                        })
                                     res.send(`<div align ='center'><h2 style='font-size: 50px'>Login Successful</h2></div><br><br><br><div align ='center'><h3 style='font-size: 50px'>Hello ${req.body.username}</h3></div><br><br><div align='center'><a style='font-size: 50px' href='./hub.html'>Client Portal</a></div>`);
                                 } else {
                                     res.send("<div align ='center'><h2 style='font-size: 50px'>Invalid username or password, please try again.</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./login.html'>Back to Login<a><div>");
@@ -121,110 +137,95 @@ app.post('/login', async(req, res) => {
     }
 });
 
-app.post('/profile',async(req ,res) => {
-    try{
-        let USER= 2;
-       const found = users.some(user => user.username === parseInt(req.body.username));
-       console.log(found);
-        let account={
-            name:req.body.name,
-            address1:req.body.add1,
-            address2:req.body.add2,
-            city:req.body.city,
-            state:req.body.state,
-            zipcode:req.body.zip,
-        };
-        sql.connect(config, function (err) {
-            var connection=new sql.Request();
-            if (err) {
-              console.log(err);
-              return;
-              }
-          connection.query("INSERT INTO ClientInformation (FullName, Address1, Address2, City, State, ZipCode, UserID) VALUES ( '" + account.name + "','" + account.address1 + "','" + 
-            account.address2 + "','" + account.city + "','" + account.state + "','" + account.zipcode + "','" + USER + "')", function(err,recordset){
-              console.log("in query function");
-              if (err) {
-                  console.log(err);
-                  return;
-              }
-              else {
-                  res.end(JSON.stringify(recordset)); 
-              }
-          });
-          connection.query();               
-      });
+app.post('/profile', async(req, res) => {
+    try {
+        var conn = new sql.ConnectionPool(dbConfig);
+
+        conn.connect().then(function() {
+                var request = new sql.Request(conn);
+                request.query("INSERT INTO ClientInformation VALUES ( '" + req.body.name + "','" + req.body.add1 + "','" +
+                        req.body.add2 + "','" + req.body.city + "','" + req.body.state + "','" + req.body.zip + "','" + userID + "')").then(function(recordset) {})
+                    .catch(function(err) {
+                        console.log(err);
+                        conn.close();
+                    });
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
         res.send("<div align ='center'><h2 style='font-size: 50px'>Profile Finished</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./login.html'>Log In</a></div><br><br>");
-    }catch(err){
+    } catch (err) {
         res.send("Internal server error");
     }
 });
 
 app.post('/fuel', async(req, res) => {
     try {
-        let USER = 2;
-        const found = users.some(user => user.username === parseInt(req.body.username));
-        console.log(found);
-        let userGall = req.body.gallons;
-        let addrs = users.find((data) => req.body.address === data.address)
-        let deldate = req.body.date;
-        let sugGall = req.body.suggestedGallon;
-        let total = req.body.total_value;
+        var conn = new sql.ConnectionPool(dbConfig);
 
-        sql.connect(config, function(err) {
+        conn.connect().then(function() {
+                var request = new sql.Request(conn);
+                request.query("SELECT Address1 FROM ClientInformation WHERE UserID=" + userID).then(function(recordset) {
+                        let userAddress = recordset.recordsets[0][0].Address1;
+                        console.log(userAddress);
+                        request.query("INSERT INTO FuelQuote VALUES ( '" + req.body.gallons + "','" + userAddress + "','" + req.body.date + "','" +
+                                req.body.suggestedPrice + "','" + req.body.total_value + "','" + userID + "')").then(function(recordset) {
 
-            var connection = new sql.Request();
-            if (err) {
+                            })
+                            .catch(function(err) {
+                                console.log(err);
+                                conn.close();
+                            });
+                    })
+                    .catch(function(err) {
+                        console.log(err);
+                        conn.close();
+                    })
+            })
+            .catch(function(err) {
                 console.log(err);
-                return;
-            }
-            connection.query("INSERT INTO FuelQuote (Gallons, DeliveryAddress, DeliveryDate, SuggestedPrice, Total) VALUES ( '" + req.body.userGall + "','" + req.body.addrs + "','" + 
-            req.body.deldate + "','" + req.body.sugGall + "','" + req.body.total_value + "','" + USER + "')", function(err,recordset){
-              console.log("in query function");
-              if (err) {
-                  console.log(err);
-                  return;
-              }
-          });
-          connection.query();               
-      });
+            });
 
+        res.send("<div align ='center'><h2 style='font-size: 50px'>Submission Successful</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./hub.html'>Back To Hub</a></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>");
 
-        res.send("<div align ='center'><h2 style='font-size: 50px'>Submission Successful</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>Log In</a></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>");
-       
-    } catch {
+    } catch (err) {
         console.log(err.message);
         res.send("Internal server error");
     }
 });
+
 app.get('/history', function(req, res) {
-    // try{
-    let foundUser = users.find((data) => req.body.username === data.username);
-    // for(const property in foundUser.requests){
-    //   res.send(<td><script>users.requests[property].userGall</script></td>);
-    //  res.send(<td><script>users.requests[property].addrs</script></td>);
-    //  res.send(<td><script>users.requests[property].deldate</script></td>);
-    // res.send(<td><script>users.requests[property].sugGall</script></td>);
-    // res.send(<td><script>users.requests[property].total</script></td>);
-    // }
-    sql.connect(config, function(err) {
+    try {
+        var conn = new sql.ConnectionPool(dbConfig);
+        var request = new sql.Request(conn);
 
-        var connection = new sql.Request();
-        if (err) {
-            console.log(err);
-            return;
-        }
-        connection.query("SELECT * FROM FuelQuote;", function(err, recordset) {
-            console.log("in query function");
-            if (err) {
+        conn.connect().then(function() {
+                request.query("SELECT * FROM FuelQuote WHERE UserID =" + userID).then(function(recordset) {
+                        // var myArr = new Array();
+                        // var gal = recordset.recordsets[0][0].Gallons;
+                        // var addr = recordset.recordsets[0][0].DeliveryAddress;
+                        // var date = recordset.recordsets[0][0].DeliveryDate;
+                        // var price = recordset.recordsets[0][0].SuggestedPrice;
+                        // var total = recordset.recordsets[0][0].Total;
+                        // myArr.push({ 'gal': gal, 'addr': addr, 'date': date, 'price': price, 'total': total });
+                        // res.json(recordset.recordsets[0]);
+                        res.json(recordset.recordsets)
+                            // res.json('list', { page_title: "History", data: rows });
+                        conn.close();
+                    })
+                    .catch(function(err) {
+                        console.log(err);
+                        conn.close();
+                    });
+            })
+            .catch(function(err) {
                 console.log(err);
-                return;
-            } else {
-                res.end(JSON.stringify(recordset));
-            }
-        });
-        connection.query();
+            });
+    } catch (err) {
+        console.log("hi");
+        console.log(err.message);
+    }
 
-    });
 });
 
 // set up the server listening at port 5000 (the port number can be changed)
