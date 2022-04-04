@@ -194,35 +194,50 @@ app.post('/fuel', async(req, res) => {
 });
 
 app.get('/history', function(req, res) {
-    try {
-        var conn = new sql.ConnectionPool(dbConfig);
-        var request = new sql.Request(conn);
+    app.post('/history',async(req,res)=>{
+               let USER=1;
+                            if(req.body.sdate != ""){
+                                sql.connect(config, function (err) {
+                                    var connection=new sql.Request();
+                                    if (err) {
+                                      console.log(err);
+                                      return;
+                                      }
+                                  connection.query("SELECT * FROM FuelQuote WHERE UserID='" + USER + "'AND DeliveryDate between'"  + req.body.sdate + "'and '" + req.body.edate + "'", function(err,recordset){
+                                      console.log("in query function");
+                                      if (err) {
+                                          console.log(err);
+                                          return;
+                                      }
+                                      else {
+                                          res.end(JSON.stringify(recordset)); 
+                                      }
+                                  });
+                                  connection.query();                                     
+                              });                         
+    }      
+        else{
+            sql.connect(config, function (err) {
+                var connection=new sql.Request();
+                if (err) {
+                  console.log(err);
+                  return;
+                  }
+              connection.query("SELECT * FROM FuelQuote WHERE UserID='" + USER + "'" , function(err,recordset){
+                  console.log("in query function");
+                  if (err) {
+                      console.log(err);
+                      return;
+                  }
+                  else {
+                    res.end(JSON.stringify(recordset)); 
 
-        conn.connect().then(function() {
-                request.query("SELECT * FROM FuelQuote WHERE UserID =" + userID).then(function(recordset) {
-                        // var myArr = new Array();
-                        // var gal = recordset.recordsets[0][0].Gallons;
-                        // var addr = recordset.recordsets[0][0].DeliveryAddress;
-                        // var date = recordset.recordsets[0][0].DeliveryDate;
-                        // var price = recordset.recordsets[0][0].SuggestedPrice;
-                        // var total = recordset.recordsets[0][0].Total;
-                        // myArr.push({ 'gal': gal, 'addr': addr, 'date': date, 'price': price, 'total': total });
-                        // res.json(recordset.recordsets[0]);
-                        res.json(recordset.recordsets)
-                            // res.json('list', { page_title: "History", data: rows });
-                        conn.close();
-                    })
-                    .catch(function(err) {
-                        console.log(err);
-                        conn.close();
-                    });
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-    } catch (err) {
-        console.log(err.message);
-    }
+                  }
+              }); 
+              connection.query();                   
+          });
+           } 
+        });
 
 });
 
