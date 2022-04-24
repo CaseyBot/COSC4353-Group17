@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <title> Log In </title>
+    <style>
+        #mylink {
+            font-size: 25px;
+        }
+        form{
+            height: 550px;
+            width: 400px;
+            background-color: rgba(51,51,51,0.75);
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 40px rgba(8,7,16,0.6);
+            padding: 60px 45px;
+            color:white;
+            text-align:left;
+        }
+        body{
+            background-image:
+            linear-gradient(
+        rgba(0, 0, 0, 0.65), 
+        rgba(0, 0, 0, 0.65)
+            ),
+         url("./components/oil.jpeg");
+        }
+
+
+        label{
+            display: block;
+            margin-top: 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        input{            
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 300;
+            display: block;
+            height: 50px;
+            width: 100%;
+            background-color: rgba(255,255,255,0.4);
+            border-radius: 3px;
+
+        }
+        .button {
+
+            padding: 15px 10px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;            
+            margin-top: 50px;
+            width: 100%;
+            background-color: white;
+            color: black;
+        }
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+            text-align:center;
+        }
+        .topnav a {
+            display: inline-block;
+            float: none;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+             margin-top:30px;
+            margin-bottom:30px;
+            text-decoration: none;
+            font-size: 22px;
+             height:30px;
+        }
+
+        .topnav a:hover {
+             background-color: #ddd;
+             color: black;
+         }
+
+        .topnav a.active {
+             background-color:#80bfff;
+            color: white;
+        }
+        h3{
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 42px;
+            text-align: center;
+        }
+    </style>
+
+<body align='center'>
+    <div class="topnav">
+        <a href="/main">Home</a>  
+        <a href="/register">Register</a>
+        <a class="active" href="/login">Login</a>
+    </div>
+
+    <form className='login' action="/login" method="POST">
+        <h3>Login Here</h3>
+
+            <label>Username</label>
+            <input type="text" id='username' name="username" required>
+            <br><br>
+
+            <label>Password</label>
+            <input type="password" id="password" name="password" required>
+            <br><br>
+
+            <button class="button" type="reset">Reset</button>
+            <button class="button" type="submit">Submit</button>
+    </form>
+    <br><br>
+
+</body>
+
+</html>
