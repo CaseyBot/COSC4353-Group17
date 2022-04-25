@@ -141,6 +141,10 @@ app.post('/register', async(req, res) => {
                                     console.log(err);
                                     conn.close();
                                 });
+                            request.query("SELECT UserID FROM UserCredentials WHERE UserLogin='" + req.body.username + "' AND UserPassword='" + hashPassword +"'").then(function(record) {
+                                    console.log(record.recordsets[0][0].UserID);
+                                    userID = record.recordsets[0][0].UserID;
+                            })                              
                         }
                     })
                     .catch(function(err) {
