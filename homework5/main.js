@@ -117,7 +117,9 @@ app.get('/login_success', function(req, res) {
 app.get('/profile_finish', function(req, res) {
     res.sendFile(path.join(__dirname + '/client/profile_finish.html'));
 });
-
+app.get('/fuel_success', function(req, res) {
+    res.sendFile(path.join(__dirname + '/client/fuel_success.html'));
+});
 let userAddr = "here";
 app.post('/register', async(req, res) => {
     try {
@@ -276,7 +278,7 @@ app.post('/fuel', async(req, res) => {
             .catch(function(err) {
                 console.log(err);
             });
-            res.redirect('/history');
+            res.redirect('/fuel_success');
        // res.send("<div align ='center'><h2 style='font-size: 50px'>Submission Successful</h2></div><br><br><div align='center'><a style='font-size: 30px' href='./hub.html'>Back To Hub</a></div><br><br><div align='center'><a style='font-size: 30px' href='./fuel.html'>");
 
     } catch (err) {
