@@ -217,6 +217,7 @@ app.post('/login', async(req, res) => {
                                                         usercity = recordset.recordsets[0][0].City;
                                                         userstate = recordset.recordsets[0][0].State;
                                                         userzip= recordset.recordsets[0][0].ZipCode;
+                                                        
                                                         if (recordset.recordsets[0][0].StateID.localeCompare("TX") == 0) {
                                                             inState = "yes";
                                                         } else {
