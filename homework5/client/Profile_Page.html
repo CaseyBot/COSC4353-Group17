@@ -116,17 +116,17 @@
                 <h3> Profile </h3>
 
             <label for="name">Full Name:</label><br>
-            <input type="text" id="name" name="name" placeholder="Name" size="50" required><br><br>
+            <input type="text" id="name" name="name" value='<%= userName %>' size="50" required><br><br>
             <label for="Address">Address:</label><br>
-            <input type="text" class="form-control" placeholder="Address 1" id="add1" name="add1" value="" size="100" required><br>
+            <input type="text" class="form-control" value='<%= useradd1 %>' id="add1" name="add1" value="" size="100" required><br>
 
-            <input type="text" class="form-control" placeholder="Address 2(Optional)" id="add2" name="add2" value="" size="100"><br><br>
+            <input type="text" class="form-control" value='<%= useradd2 %>' id="add2" name="add2" value="" size="100"><br><br>
             <label for="city">City:</label><br>
-            <input type="text" id="city" name="city" placeholder="City" size="100" required><br><br>
+            <input type="text" id="city" name="city" value='<%= usercity %>' size="100" required><br><br>
             <section>
             <label for="state">State:</label><br>
             <select style="width:100px;"id="state" name="state" required>
-            <option value="select" selected>--</option>
+            <option value='<%= userstate %>' selected><%= userstate %></option>
             <option value="AL">AL</option>
             <option value="AK">AK</option>
             <option value="AZ">AZ</option>
@@ -181,10 +181,12 @@
             
           </select><br><br>
             <label for="zip">Zip Code:</label><br>
-            <input style="width:300px; "type="text" id="zip" name="zip" placeholder="Zip Code" min="5" max="9" required><br><br>
+            <input style="width:300px; "type="text" id="zip" name="zip" value='<%= userzip %>' minlength="5" maxlength="9" required><br><br>
             <button class="button" type="submit" id="button1">Save</button>
         </section>
     </div>
 
     </form>
 </body>
+
+</html>
