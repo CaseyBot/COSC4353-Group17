@@ -90,6 +90,24 @@
 
 <head>
     <script>
+        function getDate() {
+            var today = new Date();
+            var dd = today.getDate() + 1;
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("date").setAttribute("min", today);
+        }
+
         function myFunction() {
             let locFactor = 0;
             let historyFactor = 0;
@@ -129,7 +147,7 @@
     </script>
 </head>
 
-<body>
+<body onload="getDate()">
 
     <div class="topnav">
         <a href="/main">Home</a>
@@ -148,7 +166,7 @@
         <input type="text" id="address" name="address" value='<%= userAddr %>' readonly />
         <small></small>
         <label for="date">Delivery Date: </label>
-        <input type="date" id="date" name="date" min="2022-04-26" required/>
+        <input type="date" id="date" name="date" min="2022-04-22" required/>
         <small></small>
         <label for="suggestedGallon">Suggested Price per Gallon: $</label>
         <input type="text" id="suggestedPrice" name="suggestedPrice" value=0.00 readonly />
