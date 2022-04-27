@@ -127,26 +127,23 @@ let userAddr = "here";
 let userID = 1;
 let inState = "test";
 let hasHistory = "test";
-let userAddr = "here";
-let userID = 1;
-let inState = "test";
-let hasHistory = "test";
 let userName="";
 let useradd1 = "";
 let useradd2="";
 let usercity="";
 let userstate="";
 let userzip="";
+
 app.post('/register', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
         let hashPassword = await bcrypt.hash(req.body.password, 10);
-         userName="";
+         userName = "";
          useradd1 = "";
-         useradd2="";
-         usercity="";
-         userstate="";
-         userzip=""
+         useradd2 = "";
+         usercity = "";
+         userstate = "";
+         userzip = "";
         conn.connect().then(function() {
                 var request = new sql.Request(conn);
                 request.query("SELECT * FROM UserCredentials WHERE UserLogin='" + req.body.username + "'").then(function(recordset) {
@@ -180,7 +177,6 @@ app.post('/register', async(req, res) => {
         res.send("Internal server error");
     }
 });
-
 
 app.post('/login', async(req, res) => {
     try {
