@@ -141,7 +141,12 @@ app.post('/register', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
         let hashPassword = await bcrypt.hash(req.body.password, 10);
-
+         userName="";
+         useradd1 = "";
+         useradd2="";
+         usercity="";
+         userstate="";
+         userzip=""
         conn.connect().then(function() {
                 var request = new sql.Request(conn);
                 request.query("SELECT * FROM UserCredentials WHERE UserLogin='" + req.body.username + "'").then(function(recordset) {
