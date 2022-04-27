@@ -137,7 +137,6 @@ app.post('/register', async(req, res) => {
                 var request = new sql.Request(conn);
                 request.query("SELECT * FROM UserCredentials WHERE UserLogin='" + req.body.username + "'").then(function(recordset) {
                         if (recordset.rowsAffected != 0) {
-                            console.log("username taken");
                             res.redirect('/register_fail');
                             conn.close();
                         } else {
@@ -150,7 +149,6 @@ app.post('/register', async(req, res) => {
                                     conn.close();
                                 });
                             request.query("SELECT UserID FROM UserCredentials WHERE UserLogin='" + req.body.username + "' AND UserPassword='" + hashPassword + "'").then(function(record) {
-                                console.log(record.recordsets[0][0].UserID);
                                 userID = record.recordsets[0][0].UserID;
                             })
                         }
@@ -176,36 +174,6 @@ app.post('/login', async(req, res) => {
         const username = req.body.username;
         const submittedPass = req.body.password;
 
-        // For determining history or not and TX or not
-        conn.connect().then(function() {
-                var request = new sql.Request(conn);
-                request.query("SELECT * FROM FuelQuote WHERE UserID='" + userID + "'").then(function(recordset) {
-                        if (recordset.rowsAffected == 0) {
-                            hasHistory = "no";
-                        } else {
-                            hasHistory = "yes";
-                        }
-                    })
-                    .catch(function(err) {
-                        console.log(err);
-                        conn.close();
-                    });
-                request.query("SELECT * FROM ClientInformation WHERE UserID='" + userID + "'").then(function(recordset) {
-                        if (recordset.recordsets[0][0].StateID.localeCompare("TX") == 0) {
-                            inState = "yes";
-                        } else {
-                            inState = "no";
-                        }
-                    })
-                    .catch(function(err) {
-                        console.log(err);
-                        conn.close();
-                    });
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-
         conn.connect().then(function() {
                 var request = new sql.Request(conn);
                 request.query("SELECT UserPassword FROM UserCredentials WHERE UserLogin='" + req.body.username + "'").then(function(recordset) {
@@ -226,6 +194,20 @@ app.post('/login', async(req, res) => {
                                                     request.query("SELECT * FROM ClientInformation WHERE UserID='" + userID + "'").then(function(recordset) {
                                                         userAddr = recordset.recordsets[0][0].Address1 + ', ' + recordset.recordsets[0][0].City + ', ' + recordset.recordsets[0][0].StateID + ', ' + recordset.recordsets[0][0].ZipCode;
                                                     })
+                                                    request.query("SELECT * FROM FuelQuote WHERE UserID='" + userID + "'").then(function(recordset) {
+                                                        if (recordset.rowsAffected == 0) {
+                                                            hasHistory = "no";
+                                                        } else {
+                                                            hasHistory = "yes";
+                                                        }
+                                                    })
+                                                    request.query("SELECT * FROM ClientInformation WHERE UserID='" + userID + "'").then(function(recordset) {
+                                                        if (recordset.recordsets[0][0].StateID.localeCompare("TX") == 0) {
+                                                            inState = "yes";
+                                                        } else {
+                                                            inState = "no";
+                                                        }
+                                                    })
                                                 })
                                                 .catch(function(err) {
                                                     console.log(err);
@@ -234,7 +216,7 @@ app.post('/login', async(req, res) => {
                                         })
                                         .catch(function(err) {
                                             console.log(err);
-                                        })
+                                        });
 
                                     res.redirect('/login_success');
                                 } else {
