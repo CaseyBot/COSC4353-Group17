@@ -39,7 +39,7 @@ app.get('/register', function(req, res) {
     res.sendFile(path.join(__dirname + '/client/register.html'));
 });
 app.get('/profile', function(req, res) {
-    res.sendFile(path.join(__dirname + '/client/Profile_Page.html'));
+    res.render(__dirname + "/client/Profile_Page.html", { userName: userName, useradd1: useradd1, useradd2: useradd2, usercity:usercity, userstate:userstate, userzip:userzip });
 });
 app.get('/login', function(req, res) {
     res.sendFile(path.join(__dirname + '/client/login.html'));
@@ -127,7 +127,16 @@ let userAddr = "here";
 let userID = 1;
 let inState = "test";
 let hasHistory = "test";
-
+let userAddr = "here";
+let userID = 1;
+let inState = "test";
+let hasHistory = "test";
+let userName="";
+let useradd1 = "";
+let useradd2="";
+let usercity="";
+let userstate="";
+let userzip="";
 app.post('/register', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
@@ -202,6 +211,12 @@ app.post('/login', async(req, res) => {
                                                         }
                                                     })
                                                     request.query("SELECT * FROM ClientInformation WHERE UserID='" + userID + "'").then(function(recordset) {
+                                                         userName = recordset.recordsets[0][0].FullName;
+                                                         useradd1 = recordset.recordsets[0][0].Address1;
+                                                        useradd2 = recordset.recordsets[0][0].Address2;
+                                                        usercity = recordset.recordsets[0][0].City;
+                                                        userstate = recordset.recordsets[0][0].State;
+                                                        userzip= recordset.recordsets[0][0].ZipCode;
                                                         if (recordset.recordsets[0][0].StateID.localeCompare("TX") == 0) {
                                                             inState = "yes";
                                                         } else {
@@ -241,11 +256,21 @@ app.post('/login', async(req, res) => {
 app.post('/profile', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
+
         userAddr = req.body.add1 + ', ' + req.body.city + ', ' + req.body.state + ', ' + req.body.zip;
+
         conn.connect().then(function() {
                 var request = new sql.Request(conn);
-                request.query("INSERT INTO ClientInformation(FullName, Address1, Address2, City, StateID, ZipCode, UserID) VALUES ( '" + req.body.name + "','" + req.body.add1 + "','" +
+                request.query("SELECT * FROM ClientInformation WHERE UserID=" + userID).then(function(recordset) {
+                    if (recordset.rowsAffected == 0) {
+                request.query("INSERT INTO ClientInformation(FullName, Address1, Address2, City, State, ZipCode, UserID) VALUES ( '" + req.body.name + "','" + req.body.add1 + "','" +
                         req.body.add2 + "','" + req.body.city + "','" + req.body.state + "','" + req.body.zip + "','" + userID + "')").then(function(recordset) {
+                            userName = req.body.name;
+                            useradd1 = req.body.add1;
+                            useradd2 = req.body.add2;
+                            usercity = req.body.city;
+                            userstate = req.body.state;
+                            userzip= req.body.zip;
                         if ("TX".localeCompare(req.body.state) == 0) {
                             inState = "yes";
                         } else {
@@ -256,6 +281,29 @@ app.post('/profile', async(req, res) => {
                         console.log(err);
                         conn.close();
                     });
+                        }else{
+                                //populate database then change the current entry 
+                            request.query("UPDATE ClientInformation SET FullName='" + req.body.name + "',Address1='" +  req.body.add1 + "',Address2='" + req.body.add2 
+                            + "', City='" + req.body.city + "', State='" + req.body.state + "',ZipCode='" + req.body.zip  + "' WHERE UserID ='" + userID  + "'").then(function(recordset) {
+                                userName = req.body.name;
+                                useradd1 = req.body.add1;
+                                useradd2 = req.body.add2;
+                                usercity = req.body.city;
+                                userstate = req.body.state;
+                                userzip= req.body.zip;
+                                if ("TX".localeCompare(req.body.state) == 0) {
+                                inState = "yes";
+                            } else {
+                                inState = "no";
+                            }
+                        })
+                        .catch(function(err) {
+                            console.log(err);
+                            conn.close();
+                        }); 
+                        }
+
+                             });
             })
             .catch(function(err) {
                 console.log(err);
@@ -266,7 +314,6 @@ app.post('/profile', async(req, res) => {
     }
 
 });
-
 app.post('/fuel', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
