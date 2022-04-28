@@ -18,7 +18,7 @@ app.use(express.json()); //req.body
 
 var sql = require("mssql");
 
-// Casey did the initial database condifuration below which differs by group member
+// Casey did the initial database configuration below which differs by group member
 var dbConfig = {
     server: "localhost",
     user: "test",
