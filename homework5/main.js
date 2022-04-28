@@ -1,3 +1,6 @@
+// This is the bulk of the backend, queries and all functions that end up in some html pages
+//Dylan did the first draft of this page including the extensions below and middleware.
+
 const express = require('express');
 const http = require('http');
 const app = express();
@@ -14,9 +17,8 @@ app.use(cors());
 app.use(express.json()); //req.body
 
 var sql = require("mssql");
-// const { arrayBuffer } = require('stream/consumers');
-// import { arrayBuffer } from 'stream-consumers';
 
+// Casey did the initial database condifuration below which differs by group member
 var dbConfig = {
     server: "localhost",
     user: "test",
@@ -28,6 +30,9 @@ var dbConfig = {
 };
 let Results;
 // ROUTES
+//These routes are a combination of Casey and Dylan as we created, configured and deleted as needed.
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, './client')));
 app.engine('html', require('ejs').renderFile);
@@ -47,7 +52,13 @@ app.get('/login', function(req, res) {
 app.get('/fuel_quote', function(req, res) {
     res.render(__dirname + "/client/fuel.html", { userAddr: userAddr, inState: inState, hasHistory: hasHistory });
 });
+//Dylan did the above fuel quote app.get() function that is later used in the fuel quote module
+//Dylan did the necessary variables to send to the Fuel quote module and the eventual function that is in that 
+//HTML file including the calculations and display of results. 
 
+
+//Casey did this retrieveHistory function that is used to get the results of a query rendered to the History HTML file. 
+//and most of the app.get functions to send to the correct page. 
 function retrieveHistory(quoteid) {
     var conn = new sql.ConnectionPool(dbConfig);
     conn.connect().then(function() {
@@ -134,6 +145,8 @@ let usercity="";
 let userstate="";
 let userzip="";
 
+//Dylan did the register app.post() function below that will allow a user to register and insert into the database through a query
+
 app.post('/register', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
@@ -178,6 +191,8 @@ app.post('/register', async(req, res) => {
     }
 });
 
+//Casey did the initial draft for login and Dylan came in and fixed any bugs so that it ran smoothly. Dylan also added variables into
+//this function that are essential for the fuel quote module. Casey added variables essential for the update function for profile.
 app.post('/login', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
@@ -255,6 +270,8 @@ app.post('/login', async(req, res) => {
         res.send("Internal server error");
     }
 });
+
+
 app.post('/profile', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
