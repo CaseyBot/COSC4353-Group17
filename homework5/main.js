@@ -133,6 +133,9 @@ app.get('/profile_finish', function(req, res) {
 app.get('/fuel_success', function(req, res) {
     res.sendFile(path.join(__dirname + '/client/fuel_success.html'));
 });
+app.get('/profile_updated', function(req, res) {
+    res.sendFile(path.join(__dirname + '/client/profile_updated.html'));
+});
 
 let userAddr = "here";
 let userID = 1;
@@ -144,6 +147,7 @@ let useradd2="";
 let usercity="";
 let userstate="";
 let userzip="";
+let loggedIn = "no";
 
 //Dylan did the register app.post() function below that will allow a user to register and insert into the database through a query
 //this redirects to a register success page or register fail page that Casey did. Dylan also created the universal userID that is 
@@ -218,6 +222,7 @@ app.post('/login', async(req, res) => {
                                             var request = new sql.Request(conn);
                                             request.query("SELECT UserID FROM UserCredentials WHERE UserLogin='" + req.body.username + "'").then(function(recordset) {
                                                     userID = recordset.recordsets[0][0].UserID;
+                                                    loggenIn = "yes";
                                                     request.query("SELECT * FROM ClientInformation WHERE UserID='" + userID + "'").then(function(recordset) {
                                                         userAddr = recordset.recordsets[0][0].Address1 + ', ' + recordset.recordsets[0][0].City + ', ' + recordset.recordsets[0][0].StateID + ', ' + recordset.recordsets[0][0].ZipCode;
                                                     })
@@ -333,7 +338,11 @@ app.post('/profile', async(req, res) => {
             .catch(function(err) {
                 console.log(err);
             });
-        res.redirect('/profile_finish');
+        if ("no".localeCompare(loggedIn) == 0) {
+            res.redirect('/profile_finish');
+        } else {
+            res.redirect('/profile_updated');
+        }
     } catch (err) {
         res.send("Internal server error");
     }
