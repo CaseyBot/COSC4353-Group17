@@ -146,7 +146,8 @@ let userstate="";
 let userzip="";
 
 //Dylan did the register app.post() function below that will allow a user to register and insert into the database through a query
-
+//this redirects to a register success page or register fail page that Casey did. Dylan also created the universal userID that is 
+//used throughout the backend to access the current user information in all tables within the database.
 app.post('/register', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
@@ -193,6 +194,7 @@ app.post('/register', async(req, res) => {
 
 //Casey did the initial draft for login and Dylan came in and fixed any bugs so that it ran smoothly. Dylan also added variables into
 //this function that are essential for the fuel quote module. Casey added variables essential for the update function for profile.
+//This function redirects to either login success or login failed both of which Casey made. 
 app.post('/login', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
@@ -271,6 +273,10 @@ app.post('/login', async(req, res) => {
     }
 });
 
+//This profile function was first drafted by Tahmeed by making the query that saves all of the profile variables within the database
+//Casey added the ability to also update the profile by populating the HTML page with the current entry if the customer tried 
+//to change the profile again then update the database accordingly
+//This function also redirects to the profile success page that Casey made. Dylan included variables for the price module aswell.
 
 app.post('/profile', async(req, res) => {
     try {
@@ -333,6 +339,9 @@ app.post('/profile', async(req, res) => {
     }
 
 });
+
+//Casey made the fuel function post function which will take in an initial query that takes address then taken into 
+//a second query that is added into Fuel Quotes
 app.post('/fuel', async(req, res) => {
     try {
         var conn = new sql.ConnectionPool(dbConfig);
@@ -365,7 +374,7 @@ app.post('/fuel', async(req, res) => {
         res.send("Internal server error");
     }
 });
-
+//Dylan created the ability for the app to listen to the current port
 // set up the server listening at port 5000 (the port number can be changed)
 app.listen(5500, () => {
     console.log("server has started on port 5500");
