@@ -4,7 +4,7 @@
     "type": "commonjs",
     "description": "",
     "main": "main.js",
-        "scripts": {
+    "scripts": {
         "test": "jest --forceExit --coverage",
         "start": "node main.js"
     },
