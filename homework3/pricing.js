@@ -1,1 +1,0 @@
-class Pricing_Module{}
